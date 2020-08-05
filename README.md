@@ -7,8 +7,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ### Nodemon
 
-Install nodemon :  npm install -g nodemon
-Start nodemon : run  "nodemon .\server.js" into the root directory
+Install nodemon ("npm install -g nodemon") , and then start nodemon by running  "nodemon .\server.js" command into the root directory
 
 ### Application
 
