@@ -5,10 +5,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Pre-requisite:
 
+### Nodemon
+
 Install nodemon :  npm install -g nodemon
 Start nodemon : run  "nodemon .\server.js" into the root directory
 
-## Development server
+### Application
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
