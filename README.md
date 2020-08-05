@@ -8,12 +8,16 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ### Nodemon
 
 #### - Install nodemon ("npm install -g nodemon") 
+#### - Multer install : npm install multer
 #### - Start nodemon by running  "nodemon .\server.js" command into the root directory.
 #### - "Node.js server is running on port 4000" message is displayed when node.js server has been started 
 
+### Bootstrap install
+#### - npm install bootstrap@latest --save
+
 ### Typescript2UML
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run npm install and then run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Further help
 
