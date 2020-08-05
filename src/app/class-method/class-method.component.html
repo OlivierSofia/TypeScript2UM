@@ -1,0 +1,7 @@
+<ul> {{ resultType }} {{ name }}(
+    <span *ngIf="params ">
+        <span *ngFor="let param of params; last as isLast;">
+            {{param.name}}:{{param.type}}
+            <span *ngIf="!isLast">,</span></span>
+    </span>)
+</ul>

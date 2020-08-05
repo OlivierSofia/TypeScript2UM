@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="header">
+        <h2>Typescript to UML App</h2>
+    </div>
+    <div class="row">
+        <div>
+            <h5>Selectionnez votre fichier source</h5>
+            <div >
+                <input type="file" name="tsFile" (change)="notifySelection($event)" class="btn btn-primary" />
+                <button class="btn btn-primary" (click)="onSubmit()" [disabled]="!fileSelected">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center" *ngIf="className">
+        <h4> UML Diagram</h4>
+    </div>
+    <div class="row" *ngIf="className">
+        <div class="col-6">
+            <div style="white-space: pre">
+                {{content}}
+            </div>
+        </div>
+        <div class="col-6">
+            <table mdbTable *ngIf="className">
+                <tbody>
+                    <tr class="border text-center">
+                        <td>{{className}} </td>
+                    </tr>
+                    <div class="border">
+                        <app-class-attribute *ngFor="let attribute of getAttributes()" [attributeName]="attribute.name"
+                            [attributeType]="attribute.type"></app-class-attribute>
+                    </div>
+
+                    <div class="border">
+                        <app-class-method *ngFor="let method of getMethods()" [name]="method.name" [params]="method.params"
+                            [resultType]="method.resultType"></app-class-method>
+                    </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
