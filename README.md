@@ -15,7 +15,7 @@ This application consists in two parts where Node.js part is aimed to store the 
 #### - "Node.js server is running on port 4000" message is displayed when node.js server has been started 
 
 ### Bootstrap install
-#### - npm install bootstrap@latest --save
+#### - Install bootstrap : "npm install bootstrap@latest --save"
 
 ### Typescript2UML
 
