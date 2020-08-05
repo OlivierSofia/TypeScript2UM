@@ -9,9 +9,9 @@ This application consists in two parts where Node.js part is aimed to store the 
 
 ### Nodemon
 
-#### - Install nodemon ("npm install -g nodemon") 
+#### - Install nodemon : "npm install -g nodemon"
 #### - Multer install : "npm install multer"
-#### - Start nodemon by running  "nodemon .\server.js" command into the root directory.
+#### - Start nodemon by running : "nodemon .\server.js" command into the root directory.
 #### - "Node.js server is running on port 4000" message is displayed when node.js server has been started 
 
 ### Bootstrap install
