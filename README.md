@@ -7,9 +7,9 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ### Nodemon
 
-#### Install nodemon ("npm install -g nodemon") 
-#### start nodemon by running  "nodemon .\server.js" command into the root directory.
-#### "Node.js server is running on port 4000" message is displayed when node.js server has been started 
+#### - Install nodemon ("npm install -g nodemon") 
+#### - Start nodemon by running  "nodemon .\server.js" command into the root directory.
+#### - "Node.js server is running on port 4000" message is displayed when node.js server has been started 
 
 ### Typescript2UML
 
