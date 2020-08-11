@@ -1,3 +1,4 @@
 export class Attribute {
-    constructor(name:string,type:string){};
+    constructor(public name:string,public type:string){};
+
 }
