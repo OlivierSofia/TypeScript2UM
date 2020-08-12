@@ -25,11 +25,11 @@
             <table mdbTable *ngIf="className">
                 <tbody>
                     <tr class="border text-center">
-                        <td>{{className}} </td>
+                        <td class="p-3 mb-2 bg-primary text-white">{{className}} </td>
                     </tr>
                     <div class="border">
                         <app-class-attribute *ngFor="let attribute of getAttributes()" [attributeName]="attribute.name"
-                            [attributeType]="attribute.type"></app-class-attribute>
+                            [attributeType]="attribute.type" [modifier]="attribute.modifier"></app-class-attribute>
                     </div>
 
                     <div class="border">

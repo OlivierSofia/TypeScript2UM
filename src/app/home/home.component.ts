@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 
 import {Attribute} from '../models/attribute';
 import { Method } from '../models/method';
+import { Class } from '../models/class';
 
 @Component({
   selector: 'app-home',
@@ -18,8 +19,10 @@ export class HomeComponent implements OnInit {
   uploadedFilePath: string = null;
   className: string;
   fileSelected=false;  
+  theClass:Class;
 
-  attributes=[{name:"attr11",type:"int"},{name:"attr12",type:"string"},{name:"attr13",type:"string"}];
+
+  attributes=[{modifier:"public",name:"attr11",type:"int"},{modifier:"private",name:"attr12",type:"string"},{modifier:"protected",name:"attr13",type:"string"}];
   methods=[{name:"method1",params:[{name:"mattr11",type:"int"},{name:"mattr12",type:"int"}],resultType:"object"},
   {name:"method2",params:[{name:"mattr21",type:"int"},{name:"mattr22",type:"int"}],resultType:"int"}];
 
@@ -57,7 +60,6 @@ export class HomeComponent implements OnInit {
     this.httpClient.post(this.utilsService.POST_SERVER_URL, formData)
       .subscribe(res => {
         //console.log(res);
-        alert('File Uploaded !!');
         this.generateUML();
       },
       error => console.log('Error During file upload', error))
@@ -68,7 +70,14 @@ export class HomeComponent implements OnInit {
     //getting the file from the server
     this.getTypeScriptFile().subscribe((data: any) => {
       classAsString = data;
-      this.className = this.utilsService.getClassName(classAsString);
+      try {
+        this.theClass = this.utilsService.getClassObjectFromStringRepresentation(classAsString);
+        this.className = this.theClass.name;
+        this.attributes = this.theClass.attributes;
+      } catch (error) {
+         alert(error);
+      }
+
     } );
   }
 

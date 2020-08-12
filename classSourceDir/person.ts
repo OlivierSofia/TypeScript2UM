@@ -1,6 +1,9 @@
 class Person {
-    private _id: string;
-    protected name: string;
+   private _id: string;
+	protected name: string;
+   protected streetAddress: string;
+   protected zipAddress: string;
+   public cityAddress:string;
 
     constructor() {
         this._id = uuid.v4();

@@ -10,6 +10,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ClassAttributeComponent  {
   @Input() attributeName:string;
   @Input() attributeType:string;
+  @Input() modifier:string;
 
   constructor() { }
 

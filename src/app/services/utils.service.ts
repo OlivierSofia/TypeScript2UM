@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Type } from "@angular/core";
 import { Attribute } from '../models/attribute';
 import { Method } from '../models/method';
+import {Class} from '../models/class';
+
 import { stringify } from '@angular/compiler/src/util';
 
 @Injectable({
@@ -23,94 +25,97 @@ export class UtilsService {
 
     constructor(private httpClient: HttpClient) { }
 
-    getClassName(classAsString: string): string {
+    getClassObjectFromStringRepresentation(classAsString: string): Class {
+        let result:Class;
+        let className;
+        let attributes:Attribute[]=[];
+        let methods:Method[]=[] ;
+        let constu;
+        let constructorFound = false;
+        //clean the string
+        classAsString = this.cleanString(classAsString);
+        //split the string to a string array
          this.splitted = classAsString.split(" ");
-         console.log("Splitted:"+ stringify(this.splitted))
+        // console.log("Splitted:"+ stringify(this.splitted))
+         //check the first token is the key word class
         if(this.getCurrentToken()!="class"){
-            console.log("Error:class key word expected");
-            return;
+            throw new Error("class key word expected");
         }else{
             //parse variable
             this.moveToNextToken();
             if(this.parseVariable(this.getCurrentToken())){
-                let className = this.getCurrentToken();
+                className = this.getCurrentToken();
                 console.log("className:"+className);
             }else{
-                console.log("Error:variable expected");
-                return;
+                throw new Error("variable expected");
             }
             this.moveToNextToken();
             if(this.getCurrentToken()!="{"){
-                console.log("Error: { expected");
-                return;
+                throw new Error(" { expected");
             }
             this.moveToNextToken();
             //get the list of potentiel attribute
-            let attributes:Attribute[]=[];
-            let methods:Method[]=[] ;
-            let constu;
-            let constructorFound = false;
-            while(this.hasNext()){
-                let attr:Attribute = this.parseAttributeDeclaration();
-                if(attr!=null){
-                    attributes.push(attr);
-                }else{
-                    if(!constructorFound){
-                        constu = this.parseConstructor();
-                        constructorFound = true;
-                    }
- 
-                    let method:Method = this.parseMethodDeclaration();
-                    if(method!=null){
-                        methods.push(attr);
+            try {
+                while(this.hasNext()){
+                        let attr:Attribute = this.parseAttributeDeclaration();
+                    if(attr!=null){
+                        attributes.push(attr);
                     }else{
-                        if(this.getCurrentToken()=="}"){
-                            this.moveToNextToken()
-                            if(!this.hasNext()){
-                                console.log("End of file");
-                            }else{
-                                console.log("End of file expected");
-                            }
-                        }else
-                            console.log("Only attributes are parsed!");
-                        return "classname";
+                        if(!constructorFound){
+                            constu = this.parseConstructor();
+                            constructorFound = true;
+                        }
+                        let method:Method = this.parseMethodDeclaration();
+                        if(method!=null){
+                            methods.push(attr);
+                        }else{
+                            if(this.getCurrentToken()=="}"){
+                                this.moveToNextToken()
+                                if(!this.hasNext()){
+                                    console.log("End of file");
+                                }else{
+                                    console.log("End of file expected");
+                                }
+                            }else
+                                console.log("Only attributes are parsed!");
+                                return new Class(className,attributes,methods);
+                        }
                     }
                 }
+            } catch (error) {
+                console.log("This error occurs because constructor and methods parsing are not implemented");
+            }finally{
+                //reinit the token range for the next parsing request
+                this.currentTokenRange=0;
+                return new Class(className,attributes,methods);
             }
         }
     }
-
-    parseConstructor(): any {
-       return ;
+    cleanString(classAsString: string): string {
+        return classAsString.replace(/[\t]/g, ' ');
     }
 
-    parseMethodDeclaration():Method {
-       return;
-    }
-
-
-
+    //build the attribute object from its string representation
     parseAttributeDeclaration(): Attribute {
         let result:Attribute;
         let attributeType;
         let attributeName;
+        let mod;
         if( !this.isAModifier(this.getCurrentToken())){
-            console.log("Error:modifier expected")
-            return;
+            throw new Error("modifier expected")
         }else{
             //get the modifier
             this.markTokenIndex();
-            let mod = this.getCurrentToken();
-            console.log("mod"+mod);
+            mod = this.getCurrentToken();
+            console.log("mod:"+mod);
             this.moveToNextToken();
             if(this.parseVariableWithSemiColumn( this.getCurrentToken())){
                 //get the attribute name
                 attributeName =  this.getCurrentToken().substring(0, this.getCurrentToken().length-1);
                 console.log("Attribute Name is :"+attributeName);
             }else{
-                console.log("Error:attribute name expected");
                 this.getBackToMark();
-                return;
+                throw new Error("Attribute name expected");
             }
             //get the variable type
             this.moveToNextToken();
@@ -118,47 +123,41 @@ export class UtilsService {
                 attributeType = this.getCurrentToken().substring(0,this.getCurrentToken().length-1);
                 console.log("Attribute Type is :"+attributeType);
             }else{
-                console.log("Error:type not allowed");
                 this.getBackToMark();
-                return;
+                throw new Error("Type not allowed");
             }
             this.moveToNextToken();
-            result = new Attribute(attributeName,attributeType);
+            result = new Attribute(mod,attributeName,attributeType);
             console.log("Attribute result:"+mod+","+result.name+","+result.type);
             return result;
         }
     }
 
+    //check if the specified string matches with the modifier list
     isAModifier(token: string):boolean {
         let mod = ["public","protected","private"];
         return mod.indexOf(token)!=-1;
     }
 
+    //check if the specified string matches with the list of allowed type
     isAAllowedType(token:string):boolean{
         let typeList = ["string;","int;","boolean;"];
         console.log("is allowed:"+typeList.indexOf(token));
         return typeList.indexOf(token)!=-1;
     }
 
+    //check if the specified string is alpha numeric
     parseVariable(token: string):boolean {
         let regex = '^([a-zA-Z0-9_-]+)$';
         var pattern = new RegExp(regex);
         return pattern.test(token);
     }
 
+    //check if the specified string is alpha numeric and ends with :
     parseVariableWithSemiColumn(token: string):boolean {
         let regex = '^([a-zA-Z0-9_-]+):$';
         var pattern = new RegExp(regex);
         return pattern.test(token);
-    }
-
-
-    public getClassAttributes(classAsString: string): Attribute[] {
-        return;
-    }
-
-    public getClassMethods(classAsString: string): Method[] {
-        return;
     }
 
     moveToNextToken():string{
@@ -182,6 +181,7 @@ export class UtilsService {
         }
         let token = this.splitted[this.currentTokenRange];
         token = token.replace(/[\n\r]/g, '');
+        
         //console.log("GetCurrentToken:["+token+"]");
         return token;
     }
@@ -199,5 +199,13 @@ export class UtilsService {
             this.currentTokenRange = this.markIndex;
         this.markIndex = -1;
     }
+
+    parseConstructor(): any {
+        return ;
+     }
+ 
+     parseMethodDeclaration():Method {
+        return;
+     }
 
 }
