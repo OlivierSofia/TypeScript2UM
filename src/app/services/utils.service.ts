@@ -39,6 +39,7 @@ export class UtilsService {
         // console.log("Splitted:"+ stringify(this.splitted))
          //check the first token is the key word class
         if(this.getCurrentToken()!="class"){
+            this.currentTokenRange=0;
             throw new Error("class key word expected");
         }else{
             //parse variable
@@ -47,10 +48,12 @@ export class UtilsService {
                 className = this.getCurrentToken();
                 console.log("className:"+className);
             }else{
+                this.currentTokenRange=0;
                 throw new Error("variable expected");
             }
             this.moveToNextToken();
             if(this.getCurrentToken()!="{"){
+                this.currentTokenRange=0;
                 throw new Error(" { expected");
             }
             this.moveToNextToken();
